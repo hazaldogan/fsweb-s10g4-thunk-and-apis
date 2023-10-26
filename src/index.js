@@ -8,9 +8,10 @@ import { applyMiddleware, legacy_createStore as createStore } from "redux";
 import { Provider } from "react-redux";
 import { myReducer } from "./reducers";
 import thunk from "redux-thunk";
+import logger from "redux-logger";
 import { composeWithDevTools } from "@redux-devtools/extension";
 
-const middlewares = applyMiddleware(thunk);
+const middlewares = applyMiddleware(thunk, logger);
 const depo = createStore(myReducer, composeWithDevTools(middlewares));
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
