@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 export const GET_FAVS_FROM_LS = "GET_FAVS_FROM_LS";
 export const FAV_ADD = "FAV_ADD";
 export const FAV_REMOVE = "FAV_REMOVE";
@@ -15,17 +16,35 @@ export const addFav = (info) => {
 };
 
 export const removeFav = (fav) => {
+  toast.warn("Favorilerinizden çıkarıldı!");
   return { type: FAV_REMOVE, payload: fav };
 };
 
 export const fetchAnother = () => (dispatch) => {
   dispatch(fetchLoading());
+  const loadingToast = toast.loading("Lütfen bekleyin...", {
+    autoClose: 2000,
+    closeOnClick: true,
+  });
   axios
     .get("https://catfact.ninja/fact")
     .then((res) => {
+      toast.update(loadingToast, {
+        render: "İşlem başarılı!",
+        type: "success",
+        isLoading: false,
+        autoClose: 2000,
+        closeOnClick: true,
+      });
       dispatch(fetchSuccess(res.data));
     })
     .catch((err) => {
+      toast.update(loadingToast, {
+        render: "İşlem başarısız!",
+        type: "error",
+        isLoading: false,
+        closeOnClick: true,
+      });
       dispatch(fetchError(err.message));
     });
 };

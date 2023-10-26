@@ -10,6 +10,8 @@ import { myReducer } from "./reducers";
 import thunk from "redux-thunk";
 import logger from "redux-logger";
 import { composeWithDevTools } from "@redux-devtools/extension";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const middlewares = applyMiddleware(thunk, logger);
 const depo = createStore(myReducer, composeWithDevTools(middlewares));
@@ -19,6 +21,7 @@ root.render(
   <Provider store={depo}>
     <BrowserRouter>
       <>
+        <ToastContainer />
         <App />
       </>
     </BrowserRouter>
