@@ -14,20 +14,18 @@ export const addFav = (info) => {
   return { type: FAV_ADD, payload: info };
 };
 
-export const removeFav = (id) => {
-  return { type: FAV_REMOVE, payload: id };
+export const removeFav = (fav) => {
+  return { type: FAV_REMOVE, payload: fav };
 };
 
 export const fetchAnother = () => (dispatch) => {
   dispatch(fetchLoading());
   axios
-    .get("https://www.boredapi.com/api/activity")
+    .get("https://catfact.ninja/fact")
     .then((res) => {
-      console.log(res);
       dispatch(fetchSuccess(res.data));
     })
     .catch((err) => {
-      console.log(err);
       dispatch(fetchError(err.message));
     });
 };

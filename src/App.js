@@ -1,14 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Switch, Route, NavLink } from "react-router-dom";
 import Item from "./components/Item";
 import FavItem from "./components/FavItem";
+import { fetchAnother, addFav, getFavsFromLocalStorage } from "./actions";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function App() {
-  const loading = false;
-  const current = null;
-  const favs = [];
+  const loading = useSelector((store) => store.loading);
+  const current = useSelector((store) => store.current);
+  const favs = useSelector((store) => store.favs);
 
-  function addToFavs() {}
+  const dispatch = useDispatch();
+
+  function addToFavs() {
+    dispatch(addFav(current));
+    dispatch(fetchAnother());
+  }
+
+  useEffect(() => {
+    dispatch(fetchAnother());
+    dispatch(getFavsFromLocalStorage());
+  }, []);
 
   return (
     <div className="wrapper max-w-xl mx-auto px-4">
@@ -38,7 +50,10 @@ export default function App() {
           {current && <Item data={current} />}
 
           <div className="flex gap-3 justify-end py-3">
-            <button className="select-none px-4 py-2 border border-blue-700 text-blue-700 hover:border-blue-500 hover:text-blue-500">
+            <button
+              onClick={() => dispatch(fetchAnother())}
+              className="select-none px-4 py-2 border border-blue-700 text-blue-700 hover:border-blue-500 hover:text-blue-500"
+            >
               Başka bir tane
             </button>
             <button
@@ -53,9 +68,7 @@ export default function App() {
         <Route path="/favs">
           <div className="flex flex-col gap-3">
             {favs.length > 0 ? (
-              favs.map((item) => (
-                <FavItem key={item.length} id={item.length} title={item.fact} />
-              ))
+              favs.map((item, i) => <FavItem key={i} fact={item.fact} />)
             ) : (
               <div className="bg-white p-6 text-center shadow-md">
                 Henüz bir favoriniz yok
